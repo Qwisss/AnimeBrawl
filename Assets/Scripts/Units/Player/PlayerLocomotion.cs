@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerLocomotion : MonoBehaviour
 {
+
     [SerializeField] private Player _player;
     [SerializeField] private Joystick _joystick;
 

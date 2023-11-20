@@ -37,9 +37,8 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _attackCooldown = 1.2f;
     [SerializeField] private bool _isCooldown;
 
+    //[Header("Debug")]
 
-    [Header("Debug")]
-    [SerializeField] private bool takeDamage10 = false;
 
     public int Health 
     {
@@ -90,15 +89,6 @@ public class Player : MonoBehaviour, IDamageable
 
     }
 
-    private void Update()
-    {
-        if (takeDamage10 == true) 
-        {
-            takeDamage10 = false;
-            TakeDamage(10);
-        }
-    }
-
     public virtual void TakeDamage(int damageValue)
     {
         Health -= damageValue;
@@ -120,6 +110,4 @@ public class Player : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(_attackCooldown);
         _isCooldown = false;
     }
-
-
 }

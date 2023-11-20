@@ -12,9 +12,12 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private int _maxHealth = 100;
     [SerializeField] private int _currentHealth;
 
-    [SerializeField] private int _attackDamage = 10;
-    [SerializeField] private float _attackCooldown = 1.2f;
-    [SerializeField] private bool _isCooldown;
+    [Range(1, 10)] public float Speed = 5f;
+    [Range(100, 1000)] public float RotationSpeed = 750f;
+
+    [Range(1, 100)] protected int _attackDamage = 10;
+    [SerializeField] protected float _attackCooldown = 1.2f;
+    [SerializeField] protected bool _isCooldown;
 
     public int Health
     { 
@@ -26,7 +29,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
                 _currentHealth = 0;
                 Die();
             }
-
         }
     }
 
@@ -47,21 +49,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         StartCoroutine(AttackCooldown());
     }
 
-    private void Update()
-    {
-        if (_isCooldown == false)
-        { 
-            Attack();
-   
-        }
-    }
     public virtual void TakeDamage(int damageValue)
     {
         Health -= damageValue;
     }
 
-    public virtual void Attack()
+    public virtual void Attack(Player target)
     {
+        target.TakeDamage(_attackDamage);
         StartCoroutine(AttackCooldown());
     }
 

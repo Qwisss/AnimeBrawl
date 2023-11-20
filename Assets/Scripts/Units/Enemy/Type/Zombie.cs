@@ -1,22 +1,18 @@
+using System.Collections;
 using UnityEngine;
 
 public class Zombie : Enemy
 {
-
-    public override void Attack()
+    public bool IsCooldown
     {
-        base.Attack();
+        get { return _isCooldown; }
+        set { _isCooldown = value; }
+    }
+
+    public override void Attack(Player target)
+    {
+        base.Attack(target);
 
         print("Attack Zombie");
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            TakeDamage(10);
-        }
-    }
-
 }
