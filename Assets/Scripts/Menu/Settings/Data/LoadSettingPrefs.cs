@@ -6,13 +6,15 @@ public class LoadSettingPrefs : MonoBehaviour
 {
 
     [Header("General Setting")]
-    [SerializeField] private bool _canUse = false;
-    [SerializeField] private MenuController _menuController;
-    [SerializeField] private VolumeController _volumeController;
+/*    [SerializeField] private bool _canUse = false;*/
+    [SerializeField] private VolumeSettings _volumeSettings;
 
     [Header("Volume Setting")]
     [SerializeField] private TextMeshProUGUI _volumeTextValue = null;
     [SerializeField] private Slider _volumeSlider = null;
+
+    [Header("Controller Type Setting")]
+    [SerializeField] private ControllerSettings _controllerSettings;
 
     // [Header("Brightness Setting")]
 
@@ -26,7 +28,7 @@ public class LoadSettingPrefs : MonoBehaviour
 
     // [Header("Controller Type Setting")]
 
-    private void Awake()
+    private void Start()
     {
         Initialize();
 
@@ -35,35 +37,44 @@ public class LoadSettingPrefs : MonoBehaviour
 
     private void Initialize()
     {
-        if(_menuController == null)
-        {
-            _menuController = FindObjectOfType<MenuController>();
-        }
+        _volumeSettings = _volumeSettings ?? FindObjectOfType<VolumeSettings>();
 
-        if(_volumeController == null)
-        {
-            _volumeController = FindObjectOfType<VolumeController>();
-        }
+        _controllerSettings = _controllerSettings ?? FindObjectOfType<ControllerSettings>();
     }
 
     private void LoadPrefs()
     {
-        if (_canUse == true)
-        {
+       /* if (_canUse == true)
+        {*/
+            // Load volume settings
             if (PlayerPrefs.HasKey("masterVolume"))
             {
                 float localVolume = PlayerPrefs.GetFloat("masterVolume");
-
+                SettingsData.MasterVolume = localVolume;
                 _volumeTextValue.text = localVolume.ToString("0.0");
                 _volumeSlider.value = localVolume;
                 AudioListener.volume = localVolume;
             }
             else
             {
-                _volumeController.VolumeReset("Audio");
+                _volumeSettings.VolumeReset("Audio");
             }
 
+            // Load controller type settings
+            if (PlayerPrefs.HasKey("selectedController"))
+            {
+                string selectedController = PlayerPrefs.GetString("selectedController");
+                //SettingsData.SelectedController = selectedController;
+                _controllerSettings.ActivateJoystick(selectedController);
+            }
 
-        }
+            // Load dropdown value settings
+            if (PlayerPrefs.HasKey("selectedIndex"))
+            {
+                int selectedIndex = PlayerPrefs.GetInt("selectedIndex");
+                //SettingsData.SelectedIndex = selectedIndex;
+                _controllerSettings.SetDropdownValue(selectedIndex);
+            }
+        //}
     }
 }

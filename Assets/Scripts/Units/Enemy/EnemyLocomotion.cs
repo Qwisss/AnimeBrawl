@@ -16,8 +16,8 @@ public class EnemyLocomotion : MonoBehaviour
 
     private void Awake()
     {
-        _enemy = GetComponent<Enemy>();
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _enemy = _enemy ?? GetComponent<Enemy>();
+        _navMeshAgent = _navMeshAgent ?? GetComponent<NavMeshAgent>();
     }
 
     private void Start()

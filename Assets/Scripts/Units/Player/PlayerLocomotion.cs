@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerLocomotion : MonoBehaviour
@@ -5,7 +6,7 @@ public class PlayerLocomotion : MonoBehaviour
 
     [SerializeField] private Player _player;
     [SerializeField] private Joystick _joystick;
-
+  
     private void Awake()
     {
         _player = GetComponent<Player>();
@@ -18,10 +19,21 @@ public class PlayerLocomotion : MonoBehaviour
 
     private void Iniatialize()
     {
-        if (_joystick == null)
+
+        _joystick = _joystick ?? FindObjectOfType<Joystick>();
+    }
+
+    public void SetUpColtrollerType(Joystick joystick, bool isPc)
+    {
+        if(isPc == true)
         {
-            _joystick = FindObjectOfType<Joystick>();
+                   
         }
+        else
+        {
+            _joystick = joystick;
+            //_joystick = FindObjectOfType<Joystick>();
+        } 
     }
 
     private void FixedUpdate()

@@ -37,15 +37,13 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _attackCooldown = 1.2f;
     [SerializeField] private bool _isCooldown;
 
-    //[Header("Debug")]
-
-
     public int Health 
     {
         get { return _currentHealth; }
         set
         {
-            _currentHealth = value; if (_currentHealth <= 0)
+            _currentHealth = value;
+            if(_currentHealth <= 0)
             {
                 _currentHealth = 0;
                 Die();
@@ -66,8 +64,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Iniatialize()
     {
-        tag = "Player";
-
         _currentHealth = _maxHealth;
 
         if (_healthBar == null)
@@ -91,6 +87,10 @@ public class Player : MonoBehaviour, IDamageable
 
     public virtual void TakeDamage(int damageValue)
     {
+        if(damageValue <= 0)
+        {
+            damageValue = 0;
+        }
         Health -= damageValue;
     }
 

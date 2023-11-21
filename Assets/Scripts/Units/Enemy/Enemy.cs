@@ -24,7 +24,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         get { return _currentHealth; }
         set
         {
-            _currentHealth = value; if (_currentHealth <= 0)
+            _currentHealth = value;
+
+            if(_currentHealth <= 0)
             {
                 _currentHealth = 0;
                 Die();
@@ -34,7 +36,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        tag = "Enemy";
+
     }
 
     private void Start()
@@ -51,6 +53,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void TakeDamage(int damageValue)
     {
+        if (damageValue <= 0)
+        {
+            damageValue = 0;
+        }
         Health -= damageValue;
     }
 

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TriggerAttack : MonoBehaviour
@@ -28,9 +27,6 @@ public class TriggerAttack : MonoBehaviour
             if (_zombie.IsCooldown == false)
             {
                 _zombie.Attack(player);
-
-                print(_zombie.IsCooldown);
-
             }
         }
     }
