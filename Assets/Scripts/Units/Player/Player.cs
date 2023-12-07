@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerStatType
@@ -27,8 +28,8 @@ public class Player : MonoBehaviour, IDamageable
     public List<Weapon> ActiveWeapon = new List<Weapon>();
 
     [Header("Data")]
-    [Range(1, 10)] public float Speed = 5f;
-    [Range(100, 1000)] public float RotationSpeed = 750f;
+    [Range(1, 10)][SerializeField] private float _speed = 5f;
+    [Range(100, 1000)][SerializeField] private float _rotationSpeed = 750f;
 
     [SerializeField] private int _maxHealth = 100;
     [SerializeField] private int _currentHealth;
@@ -36,6 +37,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private int _attackDamage = 10;
     [SerializeField] private float _attackCooldown = 1.2f;
     [SerializeField] private bool _isCooldown;
+
+    public List<IDamageable> targets = new List<IDamageable>();
+
 
     public int Health 
     {
@@ -49,6 +53,30 @@ public class Player : MonoBehaviour, IDamageable
                 Die();
             }
             _healthBar.UpdateBar(_maxHealth, _currentHealth);
+        }
+    }
+
+    public float Speed
+    {
+        get 
+        { 
+            return _speed; 
+        }
+        private set
+        { 
+            Speed = value; 
+        } 
+    }
+
+    public float RotationSpeed
+    {
+        get
+        {
+            return _rotationSpeed;
+        }
+        private set
+        {
+            RotationSpeed = value;
         }
     }
 
@@ -66,11 +94,11 @@ public class Player : MonoBehaviour, IDamageable
     {
         _currentHealth = _maxHealth;
 
-        if (_healthBar == null)
+        if(_healthBar == null)
         {
-            _healthBar = FindObjectOfType<HealthBar>();
+            _healthBar = FindObjectOfType<HealthBar>(); 
         }
-
+        
         if (_armorBar == null)
         {
             _armorBar = FindObjectOfType<ArmorBar>();
@@ -82,10 +110,9 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         _healthBar.UpdateBar(_maxHealth, _currentHealth);
-
     }
 
-    public virtual void TakeDamage(int damageValue)
+    public void TakeDamage(int damageValue)
     {
         if(damageValue <= 0)
         {
@@ -94,20 +121,37 @@ public class Player : MonoBehaviour, IDamageable
         Health -= damageValue;
     }
 
-    public virtual void Attack()
+    public void Attack()
     {
-        StartCoroutine(AttackCooldown());
-    }
+        Debug.Log("StartAttack");
+        if (!_isCooldown)
+        {
+            StartCoroutine(AttackCooldown());
+            foreach (IDamageable target in targets)
+            {
+                if (target == null)
+                {
+                    targets.Remove(target);
+                }
+/*                else if()
+                {
 
-    public virtual void Die()
-    {
-        Destroy(gameObject);
+                }*/
+                target.TakeDamage(_attackDamage);
+                Debug.Log("Attack");
+            }
+        }
     }
-
     private IEnumerator AttackCooldown()
     {
+        Debug.Log("Start Player Coroutine");
         _isCooldown = true;
         yield return new WaitForSeconds(_attackCooldown);
         _isCooldown = false;
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 }

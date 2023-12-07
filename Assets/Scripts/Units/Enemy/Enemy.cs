@@ -8,6 +8,11 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [Header("Components")]
     public EnemyLocomotion EnemyLocomotion;
 
+
+    [Header("Bars")]
+    [SerializeField] private BarBase _healthBar;
+
+
     [Header("Data")]
     [SerializeField] private int _maxHealth = 100;
     [SerializeField] private int _currentHealth;
@@ -15,9 +20,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [Range(1, 10)] public float Speed = 5f;
     [Range(100, 1000)] public float RotationSpeed = 750f;
 
-    [Range(1, 100)] protected int _attackDamage = 10;
+    [SerializeField][Range(1, 100)] protected int _attackDamage = 10;
     [SerializeField] protected float _attackCooldown = 1.2f;
     [SerializeField] protected bool _isCooldown;
+    public bool IsAttack;
 
     public int Health
     { 
@@ -31,6 +37,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
                 _currentHealth = 0;
                 Die();
             }
+            _healthBar.UpdateBar(_maxHealth, _currentHealth);
         }
     }
 
@@ -47,8 +54,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     private void Iniatialize()
     {
         _currentHealth = _maxHealth;
-        EnemyLocomotion = GetComponent<EnemyLocomotion>();
-        StartCoroutine(AttackCooldown());
+        if (EnemyLocomotion == null)
+        {
+            EnemyLocomotion = GetComponent<EnemyLocomotion>();
+        }
     }
 
     public virtual void TakeDamage(int damageValue)
@@ -62,19 +71,33 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void Attack(Player target)
     {
+        if (target == null || IsAttack == false)
+        {
+            print("dont attacking");
+            StopCoroutine(AttackCooldown(target));
+            return;
+        }
+
         target.TakeDamage(_attackDamage);
-        StartCoroutine(AttackCooldown());
+        StartCoroutine(AttackCooldown(target));
     }
 
-    public virtual void Die()
-    {
-        Destroy(gameObject);
-    }
 
-    private IEnumerator AttackCooldown()
+    private IEnumerator AttackCooldown(Player target)
     {
         _isCooldown = true;
         yield return new WaitForSeconds(_attackCooldown);
         _isCooldown = false;
+
+        if (IsAttack)
+        {
+            print("attacking");
+            Attack(target);
+        }
+
+    }
+    public virtual void Die()
+    {
+        Destroy(gameObject);
     }
 }

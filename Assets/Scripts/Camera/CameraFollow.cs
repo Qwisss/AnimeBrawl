@@ -22,7 +22,7 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (_target != null)
         {

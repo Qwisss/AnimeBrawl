@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System;
 
+//Example!!!!!!!!
 public class Global : MonoBehaviour
 {
     public class Homework

@@ -1,4 +1,3 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -20,11 +19,23 @@ public class ControllerSettings : MonoBehaviour
 
     private void Initialize()
     {
-        _dynamicJoystick = _dynamicJoystick ?? FindObjectOfType<DynamicJoystick>();
-        _fixedJoystick = _fixedJoystick ?? FindObjectOfType<FixedJoystick>();
-        _floatingJoystick = _floatingJoystick ?? FindObjectOfType<FloatingJoystick>();
-        _variableJoystick = _variableJoystick ?? FindObjectOfType<VariableJoystick>();
-    
+/*        if (_dynamicJoystick == null)
+        {
+            _dynamicJoystick = FindObjectOfType<DynamicJoystick>();
+        }
+        if (_fixedJoystick == null)
+        {
+            _fixedJoystick = FindObjectOfType<FixedJoystick>();
+        }
+        if (_floatingJoystick == null)
+        {
+            _floatingJoystick = FindObjectOfType<FloatingJoystick>();
+        }
+        if (_variableJoystick == null)
+        {
+            _variableJoystick = FindObjectOfType<VariableJoystick>();
+        }*/
+ 
 
         if (_controllerTypeDropdown != null)
         {
@@ -33,20 +44,13 @@ public class ControllerSettings : MonoBehaviour
         else
         {
             Debug.Log("_controllerTypeDropdown not found");
-        }
-
-        
+        }   
     }
 
     private void ActivateJoystickOnDropdownChange(int dropdownValue)
     {
         string selectedJoystickName = _controllerTypeDropdown.options[dropdownValue].text;
         ActivateJoystick(selectedJoystickName);
-    }
-
-    public void SetDropdownValue(int dropdownIndex)
-    {
-        _controllerTypeDropdown.value = dropdownIndex;
     }
 
     public void ActivateJoystick(string joystickName)
@@ -76,6 +80,10 @@ public class ControllerSettings : MonoBehaviour
     {
         SaveControllerPrefs();
         GetComponent<ConfirmationBox>().StartCoroutineConfirmationBox();
+    }
+    public void SetDropdownValue(int dropdownIndex)
+    {
+        _controllerTypeDropdown.value = dropdownIndex;
     }
 
     private void DeactivateAllJoysticks()
