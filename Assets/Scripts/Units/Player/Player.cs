@@ -38,7 +38,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _attackCooldown = 1.2f;
     [SerializeField] private bool _isCooldown;
 
-    public List<IDamageable> targets = new List<IDamageable>();
+    public List<Enemy> targets = new List<Enemy>();
 
 
     public int Health 
@@ -127,18 +127,16 @@ public class Player : MonoBehaviour, IDamageable
         if (!_isCooldown)
         {
             StartCoroutine(AttackCooldown());
-            foreach (IDamageable target in targets)
+            foreach (Enemy target in targets)
             {
-                if (target == null)
+                if (target != null)
                 {
-                    targets.Remove(target);
-                }
-/*                else if()
-                {
-
-                }*/
-                target.TakeDamage(_attackDamage);
-                Debug.Log("Attack");
+                    target.TakeDamage(_attackDamage);
+                    if (target == null)
+                    {
+                        targets.Remove(target);
+                    }
+                }               
             }
         }
     }

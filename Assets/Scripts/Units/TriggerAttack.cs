@@ -23,7 +23,7 @@ public class TriggerAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         print("Trigger Enter");
-        IDamageable target = other.GetComponent<IDamageable>();
+        Enemy target = other.GetComponent<Enemy>();
         if (target != null)
         {
             if (!_player.targets.Contains(target))
@@ -36,7 +36,7 @@ public class TriggerAttack : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         print("Trigger Exit");
-        IDamageable target = other.GetComponent<IDamageable>();
+        Enemy target = other.GetComponent<Enemy>();
         if (target != null)
         {
             _player.targets.Remove(target);
