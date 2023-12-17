@@ -26,9 +26,9 @@ public class TriggerAttack : MonoBehaviour
         Enemy target = other.GetComponent<Enemy>();
         if (target != null)
         {
-            if (!_player.targets.Contains(target))
+            if (!_player.PlayerLocomotion.targets.Contains(target))
             {
-                _player.targets.Add(target);
+                _player.PlayerLocomotion.targets.Add(target);
             }
         }
     }
@@ -39,7 +39,7 @@ public class TriggerAttack : MonoBehaviour
         Enemy target = other.GetComponent<Enemy>();
         if (target != null)
         {
-            _player.targets.Remove(target);
+            _player.PlayerLocomotion.targets.Remove(target);
         }
 
     }

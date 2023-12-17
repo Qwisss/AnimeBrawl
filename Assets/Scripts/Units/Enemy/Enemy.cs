@@ -1,17 +1,21 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(EnemyLocomotion))]
-public abstract class Enemy : MonoBehaviour, IDamageable
+
+public abstract class Enemy : PoolableObject, IDamageable
 {
     [Header("Components")]
     public EnemyLocomotion EnemyLocomotion;
-
+    public Animator animator;
+    public EnemyScriptableObject EnemyScriptableObject;
+    public NavMeshAgent Agent;
+    protected HashAnimationNames _animBase = new HashAnimationNames();
 
     [Header("Bars")]
     [SerializeField] private BarBase _healthBar;
-
 
     [Header("Data")]
     [SerializeField] private int _maxHealth = 100;
@@ -41,23 +45,29 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    private void Awake()
+    public virtual void OnEnable()
     {
-
+        SetupAgentFromConfiguration();
     }
 
-    private void Start()
-    {
-        Iniatialize();
-    }
 
-    private void Iniatialize()
+    public virtual void SetupAgentFromConfiguration()
     {
-        _currentHealth = _maxHealth;
-        if (EnemyLocomotion == null)
-        {
-            EnemyLocomotion = GetComponent<EnemyLocomotion>();
-        }
+        Agent.acceleration = EnemyScriptableObject.Acceleration;
+        Agent.angularSpeed = EnemyScriptableObject.AngularSpeed;
+        Agent.areaMask = EnemyScriptableObject.AreaMask;
+        Agent.avoidancePriority = EnemyScriptableObject.AvoidancePriority;
+        Agent.baseOffset = EnemyScriptableObject.BaseOffset;
+        Agent.height = EnemyScriptableObject.Height;
+        Agent.obstacleAvoidanceType = EnemyScriptableObject.obstacleAvoidanceType;
+        Agent.radius = EnemyScriptableObject.Radius;
+        Agent.speed = EnemyScriptableObject.Speed;
+        Agent.stoppingDistance = EnemyScriptableObject.StoppingDistance;
+
+        EnemyLocomotion.UpdateSpeed = EnemyScriptableObject.AIUpdateInterval;
+        _maxHealth = EnemyScriptableObject.MaxHealth;
+        Health = EnemyScriptableObject.CurrentHealth;
+        
     }
 
     public virtual void TakeDamage(int damageValue)
@@ -73,11 +83,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         if (target == null || IsAttack == false)
         {
-            print("dont attacking");
             StopCoroutine(AttackCooldown(target));
             return;
         }
-
+        animator.CrossFade(_animBase.HightKick, 0.1f);
         target.TakeDamage(_attackDamage);
         StartCoroutine(AttackCooldown(target));
     }
@@ -91,13 +100,21 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         if (IsAttack)
         {
-            print("attacking");
             Attack(target);
         }
 
     }
+
     public virtual void Die()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+
+        Agent.enabled = false;
     }
 }

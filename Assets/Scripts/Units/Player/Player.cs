@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public enum PlayerStatType
@@ -17,6 +18,8 @@ public class Player : MonoBehaviour, IDamageable
 {
     [Header("Components")]
     public CharacterController characterController;
+    public Animator animator;
+    public PlayerLocomotion PlayerLocomotion;
 
     [Header("Bars")]
     [SerializeField] private HealthBar _healthBar;
@@ -34,11 +37,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private int _maxHealth = 100;
     [SerializeField] private int _currentHealth;
 
-    [SerializeField] private int _attackDamage = 10;
-    [SerializeField] private float _attackCooldown = 1.2f;
-    [SerializeField] private bool _isCooldown;
-
-    public List<Enemy> targets = new List<Enemy>();
 
 
     public int Health 
@@ -110,6 +108,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         _healthBar.UpdateBar(_maxHealth, _currentHealth);
+
     }
 
     public void TakeDamage(int damageValue)
@@ -121,9 +120,8 @@ public class Player : MonoBehaviour, IDamageable
         Health -= damageValue;
     }
 
-    public void Attack()
+/*    public void Attack()
     {
-        Debug.Log("StartAttack");
         if (!_isCooldown)
         {
             StartCoroutine(AttackCooldown());
@@ -142,11 +140,10 @@ public class Player : MonoBehaviour, IDamageable
     }
     private IEnumerator AttackCooldown()
     {
-        Debug.Log("Start Player Coroutine");
         _isCooldown = true;
         yield return new WaitForSeconds(_attackCooldown);
         _isCooldown = false;
-    }
+    }*/
 
     public void Die()
     {

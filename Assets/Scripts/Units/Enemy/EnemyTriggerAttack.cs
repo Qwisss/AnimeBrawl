@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyTriggerAttack : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private Zombie _zombie;
+    [SerializeField] private Enemy _enemy;
 
     private void Start()
     {
@@ -12,9 +12,9 @@ public class EnemyTriggerAttack : MonoBehaviour
 
     private void Iniatialize()
     {
-        if (_zombie == null)
+        if (_enemy == null)
         {
-            _zombie = GetComponentInParent<Zombie>();
+            _enemy = GetComponentInParent<Enemy>();
         }
     }
 
@@ -24,15 +24,15 @@ public class EnemyTriggerAttack : MonoBehaviour
         Player player = other.GetComponent<Player>();
         if (player != null)
         {
-            _zombie.IsAttack = true;
-            _zombie.Attack(player);
+            _enemy.IsAttack = true;
+            _enemy.Attack(player);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         print("Trigger Exit");
-        _zombie.IsAttack = false;
-        _zombie.Attack(null);
+        _enemy.IsAttack = false;
+        _enemy.Attack(null);
     }
 }
