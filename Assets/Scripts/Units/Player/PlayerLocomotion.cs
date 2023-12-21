@@ -3,25 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerLocomotion : MonoBehaviour, IMovable
 {
     [Header("Components")]
     [SerializeField] private Player _player;
-    [SerializeField] private Joystick _joystick;
     [SerializeField] private AnimationController _animationController;
+    [SerializeField] private Joystick _joystick;
+    [SerializeField] private CharacterController _characterController;
 
     private Vector3 _move;
     private Vector2 _mouseLook;
     private Vector3 _rotationTarget;
 
+    [Header("Bool")]
+    public bool isPc;
     private bool _isMoving;
     public bool IsAttacking;
-    public bool isPc;
+
+    [Header("Stats")]
+    [Header("Move")]
+    private int _speed;
+    private int _rotationSpeed;
 
     [Header("Attack")]
-    [SerializeField] private int _attackDamage = 10;
-    [SerializeField] private float _attackCooldown = 1.2f;
+    private int _attackDamage;
+    private float _attackCooldown;
     [SerializeField] private bool _isCooldown;
     [SerializeField] private float animationFinishTime = 0.9f;
     public List<Enemy> targets = new List<Enemy>();
@@ -34,6 +43,8 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
     private void Awake()
     {
         _player = GetComponent<Player>();
+        _characterController = GetComponent<CharacterController>();
+        _animationController = GetComponent<AnimationController>();
     }
 
     private void Start()
@@ -49,9 +60,17 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
         }
     }
 
+    public void SetupConfiguration(int speed, int rotationSpeed,int attackDamage, float attackCooldown) 
+    {
+        _speed = speed;
+        _rotationSpeed = rotationSpeed;
+        _attackDamage = attackDamage;
+        _attackCooldown = attackCooldown;
+    }
+
     private void Update()
     {
-        if (IsAttacking && _player.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= animationFinishTime)
+        if (IsAttacking && _animationController.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= animationFinishTime)
         {
             IsAttacking = false;
             OnFightIdleEvent?.Invoke();
@@ -59,10 +78,6 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
             {
                 OnMoveEvent?.Invoke();
             }
-/*            else if (!_isMoving)
-            {
-                OnIdleEvent?.Invoke();
-            }*/
         }
 
         if (isPc)
@@ -82,7 +97,7 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
            return;
         }
 
-        _player.characterController.Move(move * Time.deltaTime * _player.Speed);
+        _characterController.Move(move * Time.deltaTime * _speed);
         bool wasMoving = _isMoving;
         _isMoving = move.magnitude > 0.01f;
         if (_isMoving && !wasMoving)
@@ -124,7 +139,7 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
         if (lookDirection != Vector3.zero)
         {
             Quaternion rotation = Quaternion.LookRotation(lookDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _player.RotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -149,7 +164,7 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
         if (move != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _player.RotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotationSpeed * Time.deltaTime);
         }
     }
     #endregion
@@ -158,16 +173,16 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
 
     public void Attack()
     {
-        if (/*!IsAttacking && */!_isCooldown)
+        if (!IsAttacking && !_isCooldown)
         {
             IsAttacking = true;
-            StartCoroutine(AttackCooldown());
             OnAttackEvent?.Invoke();
+            StartCoroutine(AttackCooldown());
             foreach (Enemy target in targets)
             {
                 if (target != null)
                 {
-                    target.TakeDamage(_attackDamage);
+                    target.EnemyHealthSystem.TakeDamage(_attackDamage);
                     if (target == null)
                     {
                         targets.Remove(target);
@@ -176,7 +191,6 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
             }
         }
     }
-
     private IEnumerator AttackCooldown()
     {
         _isCooldown = true;
@@ -199,7 +213,6 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        //_isAttacking = context.ReadValueAsButton();
         Attack();
     }
     #endregion

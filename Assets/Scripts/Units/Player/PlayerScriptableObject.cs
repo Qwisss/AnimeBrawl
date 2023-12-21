@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,5 +8,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Player Configuration", menuName = "ScriptableObject/Player Configuration")]
 public class PlayerScriptableObject : ScriptableObject
 {
+    [Header("Stats")]
+    [Header("Healths")]
+    public int MaxHealth = 100;
+    public int CurrentHealth = 100;
 
+    [Header("Move")]
+    public int Speed = 5;
+    public int RotationSpeed = 750;
+
+    [Header("Attack")]
+    public int AttackDamage = 10;
+    public float AttackCooldown = 1.2f;
 }

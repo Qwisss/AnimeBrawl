@@ -12,8 +12,15 @@ using UnityEngine.AI;
 public class EnemyScriptableObject : ScriptableObject
 {
     [Header("Stats")]
+    [Header("Health")]
     public int MaxHealth = 100;
-    public int CurrentHealth;
+    public int CurrentHealth = 100;
+
+    [Header("Attack")]
+    public int AttackDamage = 10;
+    public float AttackCooldown = 1.2f;
+    public float AttackRadius = 1.5f;
+    public bool IsRange = false;
 
     [Header("NavMeshAgent Configs")]
     public float AIUpdateInterval = 0.1f;

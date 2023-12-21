@@ -6,12 +6,18 @@ public class AnimationController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Player _player;
     [SerializeField] protected PlayerLocomotion _playerLocomotion;
+    public Animator Animator;
 
     [Header("Animations")]
     private StateMachine _stateMachine;
     protected RunState _runState;
 
     protected HashAnimationNames _animBase = new HashAnimationNames();
+
+    private void Awake()
+    {
+        _player = GetComponent<Player>();
+    }
 
     private void Start()
     {
@@ -21,7 +27,7 @@ public class AnimationController : MonoBehaviour
     private void Iniatialize()
     {
         _stateMachine = new StateMachine();
-        _stateMachine.Initialize(new IdleState(_player.animator));
+        _stateMachine.Initialize(new IdleState(Animator));
 
 
         _playerLocomotion.OnIdleEvent += HandleIdleStart;
@@ -41,7 +47,7 @@ public class AnimationController : MonoBehaviour
     {
         if (!IsIdleState())
         {
-            _stateMachine.ChangeState(new IdleState(_player.animator));
+            _stateMachine.ChangeState(new IdleState(Animator));
         }
     }
 
@@ -57,7 +63,7 @@ public class AnimationController : MonoBehaviour
     {
         if (!IsRunningState())
         {
-            _stateMachine.ChangeState(new RunState(_player.animator));
+            _stateMachine.ChangeState(new RunState(Animator));
         }
     }
 
@@ -73,7 +79,7 @@ public class AnimationController : MonoBehaviour
     {
         if (!IsHightKickState())
         {
-            _stateMachine.ChangeState(new HightKickState(_player.animator));
+            _stateMachine.ChangeState(new HightKickState(Animator));
         }
     }
 
@@ -89,7 +95,7 @@ public class AnimationController : MonoBehaviour
     {
         if (!IsFightIdleState())
         {
-            _stateMachine.ChangeState(new FightIdleState(_player.animator));
+            _stateMachine.ChangeState(new FightIdleState(Animator));
         }
     }
 

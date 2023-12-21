@@ -5,16 +5,16 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyLocomotion : MonoBehaviour, IMovable
 {
-    [Header("Bool?")]
+    [Header("Components")]
+    protected HashAnimationNames _animBase = new HashAnimationNames();
+    [SerializeField] private Enemy _enemy;
+    [SerializeField] public NavMeshAgent NavMeshAgent;
+
+    [Header("Bool")]
     public bool targetChasing;
 
     [Header("Animation")]
     [SerializeField] private bool _isRunning;
-    protected HashAnimationNames _animBase = new HashAnimationNames();
-
-    [Header("Components")]
-    [SerializeField] private Enemy _enemy;
-    [SerializeField] public NavMeshAgent NavMeshAgent;
 
     [Header("Targets")]
     [SerializeField] public Transform Target;
@@ -22,20 +22,21 @@ public class EnemyLocomotion : MonoBehaviour, IMovable
 
     [Header("Rotation")]
     private float _rotationSpeed = 1f;
-    private Coroutine _lookCoroutine;
-    private int TickPerSecond = 60;
 
     private Coroutine _followCoroutine;
 
-
+    public AttackRadius attackRadius;
+    private Coroutine LookCoroutine;
+    public bool IsAttack;
     private void Awake()
     {
-        NavMeshAgent = GetComponent<NavMeshAgent>();    
+        NavMeshAgent = GetComponent<NavMeshAgent>();
+        attackRadius.OnAttack += OnAttack;
     }
 
-    private void Start()
+    public void SetupConfiguration(float updateSpeed)
     {
-        StartCoroutine(LookAt());
+        UpdateSpeed = updateSpeed;
     }
 
     private void FixedUpdate()
@@ -76,11 +77,15 @@ public class EnemyLocomotion : MonoBehaviour, IMovable
 
         while (enabled)
         {
-            if (targetChasing == true)
+            if (targetChasing == true && NavMeshAgent.enabled)
             {
                 NavMeshAgent.SetDestination(Target.transform.position - (Target.transform.position - transform.position).normalized * 0.5f);
 
                 yield return Wait;
+            }
+            else
+            {
+                yield return null;
             }
         }
 
@@ -89,23 +94,39 @@ public class EnemyLocomotion : MonoBehaviour, IMovable
 
     #region Rotation
 
-    private IEnumerator LookAt()
-    {
 
-        WaitForSeconds Wait = new WaitForSeconds(1f / TickPerSecond);
+    private IEnumerator LookAt(Transform Target)
+    {
         Quaternion lookRotation = Quaternion.LookRotation(Target.position - transform.position);
         float time = 0;
+
         while (time < 1)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, time);
 
-            time += Time.deltaTime * _rotationSpeed;
+            time += Time.deltaTime * 2;
+            yield return null;
         }
-        yield return Wait;
+
+        transform.rotation = lookRotation;
     }
 
     #endregion
 
+    #region Attack
+    public void OnAttack(IDamageable Target)
+    {
+        //_enemy.animator.CrossFade(_animBase.HightKick, 0.1f);
+
+        if(LookCoroutine != null)
+        {
+            StopCoroutine(LookCoroutine);
+        }
+        LookCoroutine = StartCoroutine(LookAt(Target.GetTransform()));
+
+    }
+
+    #endregion
     public void OnDisable()
     {
         NavMeshAgent.enabled = false;

@@ -1,8 +1,8 @@
 
 public class AutoDestroyPoolableObject : PoolableObject
 {
-    public float AutoDestroyTime = 5;
-    private const string DisableMetodName = "Disable";
+    public float AutoDestroyTime = 5f;
+    protected const string DisableMetodName = "Disable";
 
     public virtual void OnEnable()
     {
@@ -10,8 +10,10 @@ public class AutoDestroyPoolableObject : PoolableObject
         Invoke(DisableMetodName, AutoDestroyTime);
     }
 
-    public virtual void Disable()
+    public override void OnDisable()
     {
+        base.OnDisable();
+        CancelInvoke(DisableMetodName);
         gameObject.SetActive(false);
     }
 

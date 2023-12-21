@@ -13,6 +13,7 @@ public class HashAnimationNames
     public int Run { get => Animator.StringToHash("Run"); }
     public int HightKick { get => Animator.StringToHash("HightKick"); }
     public int FightIdle { get => Animator.StringToHash("FightIdle"); }
+    public int DrawArrowBow { get => Animator.StringToHash("DrawArrowBow"); }
 
     #endregion
 

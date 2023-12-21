@@ -1,61 +1,56 @@
 
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class ObjectPool 
 {
 
     private PoolableObject Prefab;
-    private List<PoolableObject> AvailableObjects;
+    private int Size;
+    private List<PoolableObject> AvailableObjectsPool;
 
-    private ObjectPool(PoolableObject prefab, int size)
+    private ObjectPool(PoolableObject Prefab, int Size)
     {
-        this.Prefab = prefab;
-        AvailableObjects = new List<PoolableObject>(size);
+        this.Prefab = Prefab;
+        this.Size = Size;
+        AvailableObjectsPool = new List<PoolableObject>(Size);
     }
 
-    public static ObjectPool CreateInstance(PoolableObject prefab, int size)
+    public static ObjectPool CreateInstance(PoolableObject Prefab, int Size)
     {
-        ObjectPool pool = new ObjectPool(prefab, size);
+        ObjectPool pool = new ObjectPool(Prefab, Size);
 
-        GameObject poolObject = new GameObject(prefab.name + " Pool");
-        pool.CreateObjects(poolObject.transform, size);
+        GameObject poolGameObject = new GameObject(Prefab + " Pool");
+        pool.CreateObjects(poolGameObject);
 
         return pool;
-
     }
 
-    private void CreateObjects(Transform parent, int size)
+    private void CreateObjects(GameObject parent)
     {
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < Size; i++)
         {
             PoolableObject poolableObject = GameObject.Instantiate(Prefab, Vector3.zero, Quaternion.identity, parent.transform);
             poolableObject.Parent = this;
-            poolableObject.gameObject.SetActive(false);
+            poolableObject.gameObject.SetActive(false); // PoolableObject handles re-adding the object to the AvailableObjects
         }
-    }
-
-    public void ReturnObjectToPool(PoolableObject poolableObject)
-    {
-        AvailableObjects.Add(poolableObject);
     }
 
     public PoolableObject GetObject()
     {
-        if (AvailableObjects.Count > 0)
-        {
-            PoolableObject instance = AvailableObjects[0];
-            AvailableObjects.RemoveAt(0);
+        PoolableObject instance = AvailableObjectsPool[0];
 
-            instance.gameObject.SetActive(true);
+        AvailableObjectsPool.RemoveAt(0);
 
-            return instance;
-        }
-        else
-        {
-            Debug.Log($"Could not get an object from pool \"{Prefab.name}\" Pool. Probably a configuration issue");
-            return null;
-        }
+        instance.gameObject.SetActive(true);
+
+        return instance;
+    }
+
+    public void ReturnObjectToPool(PoolableObject Object)
+    {
+        AvailableObjectsPool.Add(Object);
     }
 
 }
