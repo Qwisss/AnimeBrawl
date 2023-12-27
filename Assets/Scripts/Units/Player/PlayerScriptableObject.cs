@@ -14,8 +14,8 @@ public class PlayerScriptableObject : ScriptableObject
     public int CurrentHealth = 100;
 
     [Header("Move")]
-    public int Speed = 5;
-    public int RotationSpeed = 750;
+    public float Speed = 5;
+    public float RotationSpeed = 750;
 
     [Header("Attack")]
     public int AttackDamage = 10;

@@ -50,9 +50,11 @@ public class RangeAttackRadius : AttackRadius
                 if (poolableObject != null)
                 {
                     bullet = poolableObject.GetComponent<Bullet>();
-                    bullet.Damage = Damage;
+                    //bullet.Damage = Damage;
                     bullet.transform.position = transform.position + BulletSpawnOffset;
-                    bullet.RigidBody.AddForce(Agent.transform.forward * BulletPrefab.MoveSpeed, ForceMode.VelocityChange);
+                    bullet.transform.rotation = Agent.transform.rotation;
+                    bullet.Spawn(Agent.transform.position, Damage, targetDamageable.GetTransform());
+                    //bullet.RigidBody.AddForce(Agent.transform.forward * BulletPrefab.MoveSpeed, ForceMode.VelocityChange);
                 }
             }
             else

@@ -2,31 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.Windows;
 
-[RequireComponent(typeof(CharacterController))]
+
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class PlayerLocomotion : MonoBehaviour, IMovable
 {
     [Header("Components")]
     [SerializeField] private Player _player;
     [SerializeField] private AnimationController _animationController;
-    [SerializeField] private Joystick _joystick;
-    [SerializeField] private CharacterController _characterController;
-
-    private Vector3 _move;
-    private Vector2 _mouseLook;
-    private Vector3 _rotationTarget;
+    [SerializeField] private Rigidbody _rigidbody;
+    [SerializeField] private NavMeshAgent Agent;
+    [SerializeField] private Camera Camera = null;
 
     [Header("Bool")]
-    public bool isPc;
     private bool _isMoving;
     public bool IsAttacking;
 
     [Header("Stats")]
     [Header("Move")]
-    private int _speed;
-    private int _rotationSpeed;
+    private float _speed;
+    private float _rotationSpeed;
+    private RaycastHit[] _hits = new RaycastHit[1];
+    private AgentLinkMover LinkMover;
 
     [Header("Attack")]
     private int _attackDamage;
@@ -43,7 +44,7 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _characterController = GetComponent<CharacterController>();
+        _rigidbody = GetComponent<Rigidbody>();
         _animationController = GetComponent<AnimationController>();
     }
 
@@ -54,13 +55,14 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
 
     private void Iniatialize()
     {
-        if (_joystick == null)
-        {
-            _joystick = FindObjectOfType<Joystick>();
-        }
+        Agent = GetComponent<NavMeshAgent>();
+        LinkMover = GetComponent<AgentLinkMover>();
+
+/*        LinkMover.OnLinkStart += HandleLinkStart;
+        LinkMover.OnLinkEnd += HandleLinkEnd;*/
     }
 
-    public void SetupConfiguration(int speed, int rotationSpeed,int attackDamage, float attackCooldown) 
+    public void SetupConfiguration(float speed, float rotationSpeed,int attackDamage, float attackCooldown) 
     {
         _speed = speed;
         _rotationSpeed = rotationSpeed;
@@ -80,92 +82,24 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
             }
         }
 
-        if (isPc)
-        {
-            HandlePCMovement();
-        }
-        else
-        {
-            HandleJoystickMovement();
-        }
     }
 
-    public void Move(Vector3 move)
+    #region Move
+    private void Move()
     {
-        if(IsAttacking)
-        {
-           return;
-        }
-
-        _characterController.Move(move * Time.deltaTime * _speed);
-        bool wasMoving = _isMoving;
-        _isMoving = move.magnitude > 0.01f;
-        if (_isMoving && !wasMoving)
-        {
-            OnMoveEvent?.Invoke(); 
-        }
-        else if (!_isMoving && wasMoving)
-        {
-            OnIdleEvent?.Invoke(); 
-        }
-    }
-
-    #region PCMovement
-    private void HandlePCMovement()
-    {
-        _joystick.gameObject.SetActive(false);
-
-        Vector3 move = new Vector3(_move.x, 0, _move.z);
-        UpdateRotationTarget();
-
-        Vector3 lookDirection = new Vector3(_rotationTarget.x, 0f, _rotationTarget.z);
-        RotateTowardsTarget(lookDirection);
-
-        Move(move);
-    }
-    private void UpdateRotationTarget()
-    {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(_mouseLook);
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            _rotationTarget = hit.point;
-        }
-    }
-
-    private void RotateTowardsTarget(Vector3 lookDirection)
-    {
-        if (lookDirection != Vector3.zero)
-        {
-            Quaternion rotation = Quaternion.LookRotation(lookDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
-        }
+        Agent.SetDestination(_hits[0].point);
     }
 
     #endregion  
 
-    #region JoystickMovement
-
-    private void HandleJoystickMovement()
-    {
-        _joystick.gameObject.SetActive(true);
-
-        Vector3 move = new Vector3(_joystick.Horizontal, 0, _joystick.Vertical);
-        Move(move);
-        Rotate(move);
-    }
-
-    #endregion
-
     #region Rotate
-    private void Rotate(Vector3 move)
+    private Vector3 MoveTowardTarget(Vector3 targetVector)
     {
-        if (move != Vector3.zero)
-        {
-            Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotationSpeed * Time.deltaTime);
-        }
+        var speed = _speed * Time.deltaTime;
+
+        var targetPosition = transform.position + targetVector * speed;
+        transform.position = targetPosition;
+        return targetVector;
     }
     #endregion
 
@@ -203,17 +137,18 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
     #region NewInputAction
     public void OnMove(InputAction.CallbackContext context)
     {
-        _move = context.ReadValue<Vector3>();
-    }
+        Ray ray = Camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-    public void OnMouseLook(InputAction.CallbackContext context)
-    {
-        _mouseLook = context.ReadValue<Vector2>();
+        if(Physics.RaycastNonAlloc(ray, _hits) > 0)
+        {
+            Move();
+        }
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
         Attack();
     }
+
     #endregion
 }

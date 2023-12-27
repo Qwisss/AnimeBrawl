@@ -7,13 +7,21 @@ public class Bullet : AutoDestroyPoolableObject
 
     public float MoveSpeed = 2f;
     public int Damage = 5;
+    protected Transform Target;
 
-    public void Awake()
+    private void Awake()
     {
         RigidBody = GetComponent<Rigidbody>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    public virtual void Spawn(Vector3 forward, int damage, Transform target)
+    {
+        Damage = damage;
+        Target = target;
+        RigidBody.AddForce(forward * MoveSpeed, ForceMode.VelocityChange);
+    }
+
+    protected virtual void OnTriggerEnter(Collider other)
     {
         IDamageable damageable;
         Debug.Log(other);
@@ -25,7 +33,7 @@ public class Bullet : AutoDestroyPoolableObject
 
         Disable();
     }
-    public void Disable()
+    protected void Disable()
     {
         CancelInvoke(DisableMetodName);
         RigidBody.velocity = Vector3.zero;

@@ -4,7 +4,7 @@ public class AutoDestroyPoolableObject : PoolableObject
     public float AutoDestroyTime = 5f;
     protected const string DisableMetodName = "Disable";
 
-    public virtual void OnEnable()
+    protected virtual void OnEnable()
     {
         CancelInvoke(DisableMetodName);
         Invoke(DisableMetodName, AutoDestroyTime);

@@ -78,13 +78,14 @@ GameObject:
   - component: {fileID: 8637052423128716607}
   - component: {fileID: 4712616746812306289}
   - component: {fileID: 7262691269964437744}
-  - component: {fileID: 9116204102631485838}
+  - component: {fileID: 7940210262711150150}
+  - component: {fileID: 7316172364885106931}
+  - component: {fileID: 9038574295996777277}
   - component: {fileID: 5993065728991100682}
   - component: {fileID: 4641382999944452669}
   - component: {fileID: 6642891230296343107}
   - component: {fileID: 6031165351667421335}
   - component: {fileID: 1259565633667904819}
-  - component: {fileID: 9038574295996777277}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -100,7 +101,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8189936551714393677}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: -5.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -160,8 +161,35 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!143 &9116204102631485838
-CharacterController:
+--- !u!54 &7940210262711150150
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8189936551714393677}
+  serializedVersion: 4
+  m_Mass: 10
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 2
+--- !u!136 &7316172364885106931
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -178,14 +206,33 @@ CharacterController:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.9
-  m_Radius: 0.31
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.45, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 1.8413657
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.42068285, z: 0}
+--- !u!195 &9038574295996777277
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8189936551714393677}
+  m_Enabled: 1
+  m_AgentTypeID: -1923039037
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &5993065728991100682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,9 +267,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 5993065728991100682}
   _animationController: {fileID: 6642891230296343107}
-  _joystick: {fileID: 0}
-  _characterController: {fileID: 0}
-  isPc: 0
+  _rigidbody: {fileID: 7940210262711150150}
+  _agent: {fileID: 9038574295996777277}
+  Camera: {fileID: 0}
   IsAttacking: 0
   _isCooldown: 0
   animationFinishTime: 0.9
@@ -302,22 +349,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4641382999944452669}
         m_TargetAssemblyTypeName: PlayerLocomotion, Assembly-CSharp
-        m_MethodName: OnMouseLook
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 2ccb3dd1-d7ce-4cec-b519-7fb0f06ad70a
-    m_ActionName: Player/MouseLook[/Mouse/position]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4641382999944452669}
-        m_TargetAssemblyTypeName: PlayerLocomotion, Assembly-CSharp
         m_MethodName: OnAttack
         m_Mode: 0
         m_Arguments:
@@ -335,28 +366,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!195 &9038574295996777277
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8189936551714393677}
-  m_Enabled: 0
-  m_AgentTypeID: -1923039037
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0.5
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 0
 --- !u!1001 &3960286325370737422
 PrefabInstance:
   m_ObjectHideFlags: 0

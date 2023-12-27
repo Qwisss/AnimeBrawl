@@ -9,15 +9,6 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "ce760272-6bb5-4246-8324-e358cf644a67",
-                    "expectedControlType": "Vector3",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "MouseLook",
-                    "type": "Value",
-                    "id": "2ccb3dd1-d7ce-4cec-b519-7fb0f06ad70a",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -35,94 +26,6 @@
             ],
             "bindings": [
                 {
-                    "name": "WASD",
-                    "id": "cabea8a8-83d8-49eb-80f2-11d771819719",
-                    "path": "3DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "Left",
-                    "id": "3a90afb5-db5b-453b-8f94-00ae083e6b76",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Right",
-                    "id": "2c0a20ed-fb49-4938-9f51-ad9dd2e86672",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Forward",
-                    "id": "838537c8-6bdf-4d86-b3cd-00efb78900f1",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Backward",
-                    "id": "d7a3bc34-0e6e-4646-80cf-6e7f2386f17e",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "ced8c55c-33fd-4299-be61-ab34ce0aa9cc",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "86acf5b7-35c1-49f1-b018-596610614b29",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MouseLook",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e7a376a9-3a69-4b2a-9c5f-70e76b840aa8",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MouseLook",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "",
                     "id": "5b796640-8da7-4080-b48e-a829b79490ad",
                     "path": "<Mouse>/leftButton",
@@ -135,12 +38,12 @@
                 },
                 {
                     "name": "",
-                    "id": "d6c644ce-4f5e-4c82-b7c8-453bc0edd82e",
-                    "path": "<Gamepad>/rightTrigger",
+                    "id": "2f46fc92-3e16-4d63-8987-6e34b3e366f3",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

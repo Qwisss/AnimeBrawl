@@ -1,8 +1,10 @@
 
+using UnityEngine;
+
 public class EnemyHealthSystem : HealthSystemBase
 {
 
-    new protected EnemyHealthBar _healthBar;
+    [SerializeField] new protected BarBase _healthBar;
 
     public override void Initialize()
     {
