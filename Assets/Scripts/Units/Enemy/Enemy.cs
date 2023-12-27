@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 public abstract class Enemy : PoolableObject
 {
-    [Header("Components")]
+    /*[Header("Components")]
     public HashAnimationNames AnimBase = new HashAnimationNames();
     public EnemyScriptableObject EnemyScriptableObject;
 
@@ -54,5 +54,5 @@ public abstract class Enemy : PoolableObject
         base.OnDisable();
 
         Agent.enabled = false;
-    }
+    }*/
 }

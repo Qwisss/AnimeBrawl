@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public Transform Player;
+   /* public Transform Player;
     public int NumberOfEnemiesToSpawn = 5;
     public float SpawnDelay = 1f;
     public List<Enemy> EnemyPrefab = new List<Enemy>();
@@ -99,5 +99,5 @@ public class EnemySpawner : MonoBehaviour
     {
         RoundRobin,
         Random
-    } 
+    } */
 }

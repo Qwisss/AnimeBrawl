@@ -8,9 +8,10 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Vector3 _offset = new Vector3(0 , 19, -7);
 
     private Vector3 _velocity = Vector3.zero;
-    private Player _target;
+    private CharacterMovement _target;
 
     [Header("Zoom")]
+    [SerializeField] private InputController _inputController;
     private float _zoomSpeed = 0.01f;
     [SerializeField] private float _minZoom;
     [SerializeField] private float _maxZoom;
@@ -18,13 +19,20 @@ public class CameraFollow : MonoBehaviour
     private void Start()
     {
         Initialize();
+
+        _inputController.OnCameraZoomScrollEvent += Zoom;
     }
 
     private void Initialize()
     {
         if (_target == null)
         {
-            _target = FindObjectOfType<Player>();
+            _target = FindObjectOfType<CharacterMovement>();
+        }
+
+        if (_inputController == null)
+        {
+            _inputController = FindObjectOfType<InputController>();
         }
         _maxZoom = _offset.y * 1.5f;
         _minZoom = _offset.y / 5f;
@@ -53,6 +61,7 @@ public class CameraFollow : MonoBehaviour
 
     private void Zoom(float delta)
     {
+        Debug.Log("2");
         float zoomAmount = Mathf.Clamp(_offset.y - (delta * _zoomSpeed), _minZoom, _maxZoom);
 
         float zoomFactor = zoomAmount / _maxZoom;
@@ -63,16 +72,7 @@ public class CameraFollow : MonoBehaviour
 
     #endregion
 
-    #region Actions
 
-    public void OnCameraZoom(InputAction.CallbackContext context)
-    {
-        float scrollDelta = context.ReadValue<Vector2>().y;;
-
-        Zoom(scrollDelta);
-    }
-
-    #endregion
 
 }
 

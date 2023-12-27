@@ -1,7 +1,7 @@
 using UnityEngine;
 public class TriggerAttack : MonoBehaviour
 {
-
+/*
     [Header("Components")]
     [SerializeField] private PlayerLocomotion _playerLocomotion;
 
@@ -40,5 +40,5 @@ public class TriggerAttack : MonoBehaviour
             _playerLocomotion.targets.Remove(target);
         }
 
-    }
+    }*/
 }

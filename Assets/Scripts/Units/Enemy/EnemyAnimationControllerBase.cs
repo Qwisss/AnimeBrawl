@@ -10,7 +10,7 @@ public class EnemyAnimationControllerBase : MonoBehaviour
 
     [Header("Animations")]
     private StateMachine _stateMachine;
-    protected RunState _runState;
+    //protected RunState _runState;
 
     protected HashAnimationNames _animBase = new HashAnimationNames();
 
@@ -29,8 +29,8 @@ public class EnemyAnimationControllerBase : MonoBehaviour
     private void Iniatialize()
     {
         _stateMachine = new StateMachine();
-        _stateMachine.Initialize(new IdleState(Animator));
-        _enemyLocomotion.attackRadius.OnDrawArrowBowEvent += HandleDrawArrowBowStart;
+        //_stateMachine.Initialize(new IdleState(Animator));
+       // _enemyLocomotion.attackRadius.OnDrawArrowBowEvent += HandleDrawArrowBowStart;
 
 
         /*        _enemyLocomotion.OnIdleEvent += HandleIdleStart;
@@ -47,7 +47,7 @@ public class EnemyAnimationControllerBase : MonoBehaviour
         _stateMachine.CurrentState.Update();
     }
 
-    #region IdleState
+  /*  #region IdleState
     private void HandleIdleStart()
     {
         if (!IsIdleState())
@@ -78,7 +78,7 @@ public class EnemyAnimationControllerBase : MonoBehaviour
     }
     #endregion
 
-    #region HightKickState
+    #region AttackState
 
     private void HandleHightKickStart()
     {
@@ -95,7 +95,7 @@ public class EnemyAnimationControllerBase : MonoBehaviour
 
     #endregion 
 
-    #region FightIdleState
+    #region DeathState
     private void HandleFightIdleStart()
     {
         if (!IsFightIdleState())
@@ -109,23 +109,8 @@ public class EnemyAnimationControllerBase : MonoBehaviour
         return _stateMachine.CurrentState.GetType() == typeof(FightIdleState);
     }
 
-    #endregion
+    #endregion*/
 
-    #region DrawArrowBowState
-
-    private void HandleDrawArrowBowStart()
-    {
-        if (!IsDrawArrowBowState())
-        {
-            _stateMachine.ChangeState(new DrawArrowBowState(Animator));
-        }
-    }
-
-    private bool IsDrawArrowBowState()
-    {
-        return _stateMachine.CurrentState.GetType() == typeof(DrawArrowBowState);
-    }
-
-    #endregion 
+   
 
 }

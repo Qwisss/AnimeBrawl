@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class AttackRadius : MonoBehaviour
 {
-    public SphereCollider SphereCollider;
+   /* public SphereCollider SphereCollider;
     protected List<IDamageable> Damageables = new List<IDamageable>();
     public int Damage = 10;
     public float AttackCooldown = 1.0f;
@@ -102,5 +102,5 @@ public class AttackRadius : MonoBehaviour
     {
         return Damageable != null && !Damageable.GetTransform().gameObject.activeSelf;
     }
-
+*/
 }

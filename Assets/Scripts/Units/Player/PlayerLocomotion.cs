@@ -11,7 +11,7 @@ using UnityEngine.Windows;
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerLocomotion : MonoBehaviour, IMovable
 {
-    [Header("Components")]
+   /* [Header("Components")]
     [SerializeField] private Player _player;
     [SerializeField] private AnimationController _animationController;
     [SerializeField] private Rigidbody _rigidbody;
@@ -58,8 +58,8 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
         Agent = GetComponent<NavMeshAgent>();
         LinkMover = GetComponent<AgentLinkMover>();
 
-/*        LinkMover.OnLinkStart += HandleLinkStart;
-        LinkMover.OnLinkEnd += HandleLinkEnd;*/
+*//*        LinkMover.OnLinkStart += HandleLinkStart;
+        LinkMover.OnLinkEnd += HandleLinkEnd;*//*
     }
 
     public void SetupConfiguration(float speed, float rotationSpeed,int attackDamage, float attackCooldown) 
@@ -135,7 +135,7 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
     #endregion
 
     #region NewInputAction
-    public void OnMove(InputAction.CallbackContext context)
+*//*    public void OnMove(InputAction.CallbackContext context)
     {
         Ray ray = Camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -148,7 +148,7 @@ public class PlayerLocomotion : MonoBehaviour, IMovable
     public void OnAttack(InputAction.CallbackContext context)
     {
         Attack();
-    }
+    }*//*
 
-    #endregion
+    #endregion*/
 }

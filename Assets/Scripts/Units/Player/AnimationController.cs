@@ -4,20 +4,14 @@ using UnityEngine;
 public class AnimationController : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private Player _player;
-    [SerializeField] protected PlayerLocomotion _playerLocomotion;
+    [SerializeField] protected CharacterMovement _characterMovement;
     public Animator Animator;
 
     [Header("Animations")]
     private StateMachine _stateMachine;
-    protected RunState _runState;
+    //protected RunState _runState;
 
     protected HashAnimationNames _animBase = new HashAnimationNames();
-
-    private void Awake()
-    {
-        _player = GetComponent<Player>();
-    }
 
     private void Start()
     {
@@ -27,14 +21,13 @@ public class AnimationController : MonoBehaviour
     private void Iniatialize()
     {
         _stateMachine = new StateMachine();
-        _stateMachine.Initialize(new IdleState(Animator));
+        _stateMachine.Initialize(new TwoHanded_IdleState(Animator));
 
 
-        _playerLocomotion.OnIdleEvent += HandleIdleStart;
-        _playerLocomotion.OnMoveEvent += HandleRunStart;
-        _playerLocomotion.OnAttackEvent += HandleHightKickStart;
-        _playerLocomotion.OnFightIdleEvent += HandleFightIdleStart;
-
+        _characterMovement.OnIdleEvent += HandleIdleStart;
+        _characterMovement.OnMoveEvent += HandleRunStart;
+        _characterMovement.OnAttackEvent += HandleAttackStart;
+       // _characterMovement.OnFightIdleEvent += HandleDeathStart;
     }
 
     private void Update()
@@ -42,18 +35,20 @@ public class AnimationController : MonoBehaviour
         _stateMachine.CurrentState.Update();
     }
 
+    #region TwoHanded
+
     #region IdleState
     private void HandleIdleStart()
     {
         if (!IsIdleState())
         {
-            _stateMachine.ChangeState(new IdleState(Animator));
+            _stateMachine.ChangeState(new TwoHanded_IdleState(Animator));
         }
     }
 
     private bool IsIdleState()
     {
-        return _stateMachine.CurrentState.GetType() == typeof(IdleState);
+        return _stateMachine.CurrentState.GetType() == typeof(TwoHanded_IdleState);
     }
 
     #endregion
@@ -61,48 +56,51 @@ public class AnimationController : MonoBehaviour
     #region RunState
     private void HandleRunStart()
     {
-        if (!IsRunningState())
+        if (!IsRunState())
         {
-            _stateMachine.ChangeState(new RunState(Animator));
+            _stateMachine.ChangeState(new TwoHanded_RunState(Animator));
         }
     }
 
-    private bool IsRunningState()
+    private bool IsRunState()
     {
-        return _stateMachine.CurrentState.GetType() == typeof(RunState);
+        return _stateMachine.CurrentState.GetType() == typeof(TwoHanded_RunState);
     }
     #endregion
 
-    #region HightKickState
+    #region AttackState
 
-    private void HandleHightKickStart()
+    private void HandleAttackStart()
     {
-        if (!IsHightKickState())
+        if (!IsAttackState())
         {
-            _stateMachine.ChangeState(new HightKickState(Animator));
+            _stateMachine.ChangeState(new TwoHanded_AttackState(Animator));
         }
     }
 
-    private bool IsHightKickState()
+    private bool IsAttackState()
     {
-        return _stateMachine.CurrentState.GetType() == typeof(HightKickState);
+        return _stateMachine.CurrentState.GetType() == typeof(TwoHanded_AttackState);
     }
 
     #endregion
 
-    #region FightIdleState
-    private void HandleFightIdleStart()
+    #region DeathkState
+
+    private void HandleDeathStart()
     {
-        if (!IsFightIdleState())
+        if (!IsDeathState())
         {
-            _stateMachine.ChangeState(new FightIdleState(Animator));
+            _stateMachine.ChangeState(new TwoHanded_DeathState(Animator));
         }
     }
 
-    private bool IsFightIdleState()
+    private bool IsDeathState()
     {
-        return _stateMachine.CurrentState.GetType() == typeof(FightIdleState);
+        return _stateMachine.CurrentState.GetType() == typeof(TwoHanded_DeathState);
     }
 
     #endregion
+
+#endregion
 }

@@ -8,12 +8,14 @@ public class HashAnimationNames
 
     #region properties
 
-    public int Idle { get => Animator.StringToHash("Idle"); }
-    public int Walk { get => Animator.StringToHash("Walk"); }
-    public int Run { get => Animator.StringToHash("Run"); }
-    public int HightKick { get => Animator.StringToHash("HightKick"); }
-    public int FightIdle { get => Animator.StringToHash("FightIdle"); }
-    public int DrawArrowBow { get => Animator.StringToHash("DrawArrowBow"); }
+    #region TwoHanded
+
+    public int TwoHanded_Idle { get => Animator.StringToHash("TwoHanded_Idle"); }
+    public int TwoHanded_Run { get => Animator.StringToHash("TwoHanded_Run"); }
+    public int TwoHanded_Attack { get => Animator.StringToHash("TwoHanded_Attack"); }
+    public int TwoHanded_Death { get => Animator.StringToHash("TwoHanded_Death"); }
+
+    #endregion
 
     #endregion
 

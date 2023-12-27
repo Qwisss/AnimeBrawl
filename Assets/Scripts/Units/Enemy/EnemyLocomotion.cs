@@ -5,7 +5,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyLocomotion : MonoBehaviour, IMovable
 {
-    [Header("Components")]
+    /*[Header("Components")]
     protected HashAnimationNames _animBase = new HashAnimationNames();
     [SerializeField] private Enemy _enemy;
     [SerializeField] public NavMeshAgent NavMeshAgent;
@@ -39,7 +39,7 @@ public class EnemyLocomotion : MonoBehaviour, IMovable
         UpdateSpeed = updateSpeed;
     }
 
-    private void FixedUpdate()
+*//*    private void FixedUpdate()
     {
         if (NavMeshAgent.velocity.magnitude > 0.01f && !_isRunning)
         {
@@ -51,7 +51,7 @@ public class EnemyLocomotion : MonoBehaviour, IMovable
             _isRunning = false;
             _enemy.animator.CrossFade(_animBase.Idle, 0.1f);
         }
-    }
+    }*//*
 
     #region Move
     public void StartChasing()
@@ -130,5 +130,5 @@ public class EnemyLocomotion : MonoBehaviour, IMovable
     public void OnDisable()
     {
         NavMeshAgent.enabled = false;
-    }
+    }*/
 }

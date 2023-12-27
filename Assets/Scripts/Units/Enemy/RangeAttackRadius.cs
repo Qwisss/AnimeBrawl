@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class RangeAttackRadius : AttackRadius
 {
-    public NavMeshAgent Agent;
+/*    public NavMeshAgent Agent;
     public Enemy _enemy;
     public Bullet BulletPrefab;
     public Vector3 BulletSpawnOffset = new Vector3(0, 0.5f, 0);
@@ -100,5 +100,5 @@ public class RangeAttackRadius : AttackRadius
         {
             Agent.enabled = true;
         }
-    }
+    }*/
 }

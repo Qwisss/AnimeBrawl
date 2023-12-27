@@ -14,7 +14,7 @@ public enum PlayerStatType
 
 public class Player : MonoBehaviour
 {
-    [Header("Components")]
+ /*   [Header("Components")]
     public PlayerScriptableObject PlayerScriptableObject;
 
     public PlayerLocomotion PlayerLocomotion;
@@ -43,5 +43,5 @@ public class Player : MonoBehaviour
         PlayerLocomotion.SetupConfiguration(PlayerScriptableObject.Speed, PlayerScriptableObject.RotationSpeed,PlayerScriptableObject.AttackDamage, PlayerScriptableObject.AttackCooldown);
         //AnimationController.SetupConfiguration()
         HealthSystemBase.SetupConfiguration(PlayerScriptableObject.MaxHealth, PlayerScriptableObject.CurrentHealth);
-    }
+    }*/
 }
