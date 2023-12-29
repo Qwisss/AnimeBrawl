@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,65 +11,74 @@ public class InputController : MonoBehaviour
 
     [Header("MousePosition")]
     [HideInInspector] public Vector3 MouseInputPosition;
+    Ray _ray;
+    RaycastHit _hit;
 
+    private GameObject _currentHoverOverObject;
 
     public event Action<float> OnCameraZoomScrollEvent;
     public event Action<Vector3> OnMoveClickEvent;
-    public event Action OnAttackClickEvent;
+    public event Action OnLeftClickEvent;
+    public event Action<RaycastHit> OnInteractableObjectEvent;
 
-
-
-    private void Start()
+    private void Awake()
     {
         _camera = Camera.main;
     }
 
-    private void Update()
+    private void Start()
     {
-        UpdateCurrentMousePosition();
-    }
 
+        StartCoroutine(UpdateTimer());
+    }
 
     private void UpdateCurrentMousePosition()
     {
-        Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, float.MaxValue))
+        _ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        if (Physics.Raycast(_ray, out _hit, float.MaxValue))
         {
-            MouseInputPosition = hit.point;
-
+            MouseInputPosition = _hit.point;
+            if (_currentHoverOverObject != _hit.transform.gameObject)
+            {
+                _currentHoverOverObject = _hit.transform.gameObject;
+                OnInteractableObjectEvent?.Invoke(_hit);
+            }
         }
-
     }
-
 
     #region Actions
 
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnRightClick(InputAction.CallbackContext context)
     {
         OnMoveClickEvent?.Invoke(MouseInputPosition);
-       /* Vector2 mousePos = Mouse.current.position.ReadValue();*/
-        //OnMoveClick?.Invoke(mousePos);
-        /*        Ray ray = Camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-                if (Physics.RaycastNonAlloc(ray, _hits) > 0)
-                {
-                    Move();
-                }*/
     }
 
-    public void OnAttack(InputAction.CallbackContext context)
+    public void OnLeftClick(InputAction.CallbackContext context)
     {
-        OnAttackClickEvent?.Invoke();
+        OnLeftClickEvent?.Invoke();
     }
 
-    public void OnCameraZoom(InputAction.CallbackContext context)
+    public void OnScroll(InputAction.CallbackContext context)
     {
-        Debug.Log("1");
         float scrollDelta = context.ReadValue<Vector2>().y;
+
         OnCameraZoomScrollEvent?.Invoke(scrollDelta);
 
     }
 
     #endregion
+
+
+    private IEnumerator UpdateTimer()
+    {
+        WaitForSeconds Wait = new WaitForSeconds(DataConfig.UpdateRate);
+
+        while (true)
+        {
+            UpdateCurrentMousePosition();
+
+            yield return Wait;
+        }
+
+    }
 }

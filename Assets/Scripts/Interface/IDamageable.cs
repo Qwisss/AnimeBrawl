@@ -7,7 +7,5 @@ public interface IDamageable
 
     public void TakeDamage(int damageValue) { }
 
-    Transform GetTransform();
-
     public void Die() { }
 }

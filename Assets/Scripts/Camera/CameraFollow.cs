@@ -61,12 +61,11 @@ public class CameraFollow : MonoBehaviour
 
     private void Zoom(float delta)
     {
-        Debug.Log("2");
         float zoomAmount = Mathf.Clamp(_offset.y - (delta * _zoomSpeed), _minZoom, _maxZoom);
 
         float zoomFactor = zoomAmount / _maxZoom;
 
-        _offset.z = Mathf.Lerp(0f, -7f, zoomFactor);
+        _offset.z = Mathf.Lerp(0f, -13f, zoomFactor);
         _offset.y = zoomAmount;
     }
 

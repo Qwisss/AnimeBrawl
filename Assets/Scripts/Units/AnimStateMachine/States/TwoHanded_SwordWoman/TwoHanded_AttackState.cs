@@ -23,5 +23,11 @@ public class TwoHanded_AttackState : State
         anim.StopPlayback();
     }
 
+    public override void Update()
+    {
+        base.Update();
+
+    }
+
 
 }

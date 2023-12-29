@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
 
-public class AnimationController : MonoBehaviour
+public class CharacterAnimationController : AnimationControllerBase
 {
     [Header("Components")]
     [SerializeField] protected CharacterMovement _characterMovement;
+    [SerializeField] protected AttackHandler _attackHandler;
     public Animator Animator;
 
     [Header("Animations")]
     private StateMachine _stateMachine;
-    //protected RunState _runState;
+
 
     protected HashAnimationNames _animBase = new HashAnimationNames();
 
@@ -26,8 +27,10 @@ public class AnimationController : MonoBehaviour
 
         _characterMovement.OnIdleEvent += HandleIdleStart;
         _characterMovement.OnMoveEvent += HandleRunStart;
-        _characterMovement.OnAttackEvent += HandleAttackStart;
-       // _characterMovement.OnFightIdleEvent += HandleDeathStart;
+
+        _attackHandler.OnAttackEvent += HandleAttackStart;
+        //_attackHandler.OnIdleEvent += HandleIdleStart;
+        // _characterMovement.OnFightIdleEvent += HandleDeathStart;
     }
 
     private void Update()
@@ -72,7 +75,8 @@ public class AnimationController : MonoBehaviour
 
     private void HandleAttackStart()
     {
-        if (!IsAttackState())
+
+        if (!IsAttackState() || !Animator.IsInTransition(0))
         {
             _stateMachine.ChangeState(new TwoHanded_AttackState(Animator));
         }

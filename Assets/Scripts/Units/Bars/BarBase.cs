@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class BarBase : MonoBehaviour
 {
 
-    [SerializeField] private Slider _currentBar;
+    [SerializeField] protected Slider _currentBar;
 
     public virtual void Awake()
     {

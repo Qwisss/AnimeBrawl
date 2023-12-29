@@ -14,15 +14,13 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Stats")]
     [Header("Move")]
-    private float _speed;
-    private float _rotationSpeed;
-    private float UpdateRate = 0.1f;
+/*    private float _speed;
+    private float _rotationSpeed;*/
 
     [SerializeField] private float animationFinishTime = 0.9f;
 
     public event Action OnIdleEvent;
     public event Action OnMoveEvent;
-    public event Action OnAttackEvent;
 
     private void Awake()
     {
@@ -30,14 +28,15 @@ public class CharacterMovement : MonoBehaviour
         {
             Agent = GetComponent<NavMeshAgent>();
         }
-    }
-    
-    private void Start()
-    {
+
         if (InputController == null)
         {
             InputController = GetComponent<InputController>();
         }
+    }
+    
+    private void Start()
+    {
 
         InputController.OnMoveClickEvent += SetDesctination;
 
@@ -47,16 +46,22 @@ public class CharacterMovement : MonoBehaviour
     {
         if (Agent.SetDestination(destinationPosition))
         {
+            Agent.isStopped = false;
             OnMoveEvent?.Invoke();
             StartCoroutine(IsDestinationReached());
         }
+    }
+
+    public void StopDestination()
+    {
+        Agent.isStopped = true;
     }
 
     private IEnumerator IsDestinationReached()
     {
         while (Agent.velocity.magnitude > 0.1f)
         {
-            yield return new WaitForSeconds(UpdateRate);
+            yield return new WaitForSeconds(DataConfig.UpdateRate);
         }
 
         OnIdleEvent?.Invoke();

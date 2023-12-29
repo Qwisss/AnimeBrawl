@@ -2,11 +2,11 @@
     "name": "InputManager",
     "maps": [
         {
-            "name": "Player",
+            "name": "Character",
             "id": "8e1db2b7-f9df-40cf-afbb-d1ae47403e8c",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "RightClick",
                     "type": "Value",
                     "id": "ce760272-6bb5-4246-8324-e358cf644a67",
                     "expectedControlType": "Vector2",
@@ -15,10 +15,19 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "LeftClick",
                     "type": "Button",
                     "id": "75c310f7-5bc4-4acd-aa3d-9eaf30e7c651",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Scroll",
+                    "type": "Value",
+                    "id": "3836eab8-03a2-480e-b766-53ebdc06bd7d",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -32,7 +41,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -43,35 +52,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Camera",
-            "id": "fc6eb67a-0c03-4ca1-a0d7-64ba9d44c81a",
-            "actions": [
-                {
-                    "name": "Zoom",
-                    "type": "Value",
-                    "id": "aa8aedba-261d-4bd1-9129-7608846cb898",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "a1b7c90e-31d8-458c-b46d-250290544724",
+                    "id": "189e0de0-a2f1-40b3-8e9c-99cf4869e168",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "Scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
