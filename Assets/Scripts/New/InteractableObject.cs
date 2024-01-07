@@ -1,24 +1,18 @@
+using System;
 using UnityEngine;
 
 public class InteractableObject : MonoBehaviour, IInteractable
 {
-
-    [SerializeField] private string _info;
     public string ObjectName;
+    public event Action<Inventory> OnInteractEvent;
 
 
-    private void Awake()
+    private void Start()
     {
-        ObjectName = transform.name;
+        ObjectName = gameObject.name;
     }
-
-    public void Interact()
+    public void Interact(Inventory inventory)
     {
-        Debug.Log(_info);
-    }
-
-    public Transform GetTransform()
-    {
-       return transform;
+        OnInteractEvent?.Invoke(inventory);
     }
 }

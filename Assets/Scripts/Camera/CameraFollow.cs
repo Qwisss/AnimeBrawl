@@ -5,7 +5,7 @@ public class CameraFollow : MonoBehaviour
 {
     [Header("Follow")]
     [SerializeField] private float _smoothTime = 0.9f;
-    [SerializeField] private Vector3 _offset = new Vector3(0 , 19, -7);
+    [SerializeField] private Vector3 _offset = new Vector3(0 , 20, -13);
 
     private Vector3 _velocity = Vector3.zero;
     private CharacterMovement _target;
@@ -13,8 +13,9 @@ public class CameraFollow : MonoBehaviour
     [Header("Zoom")]
     [SerializeField] private InputController _inputController;
     private float _zoomSpeed = 0.01f;
-    [SerializeField] private float _minZoom;
-    [SerializeField] private float _maxZoom;
+    [SerializeField] private float _minZoomY;
+    [SerializeField] private float _maxZoomY;
+    [SerializeField] private float _maxZoomZ;
 
     private void Start()
     {
@@ -34,8 +35,9 @@ public class CameraFollow : MonoBehaviour
         {
             _inputController = FindObjectOfType<InputController>();
         }
-        _maxZoom = _offset.y * 1.5f;
-        _minZoom = _offset.y / 5f;
+        _maxZoomY = _offset.y;
+        _minZoomY = _offset.y / 5f;
+        _maxZoomZ = _offset.z;
     }
 
     private void Update()
@@ -61,11 +63,11 @@ public class CameraFollow : MonoBehaviour
 
     private void Zoom(float delta)
     {
-        float zoomAmount = Mathf.Clamp(_offset.y - (delta * _zoomSpeed), _minZoom, _maxZoom);
+        float zoomAmount = Mathf.Clamp(_offset.y - (delta * _zoomSpeed), _minZoomY, _maxZoomY);
 
-        float zoomFactor = zoomAmount / _maxZoom;
+        float zoomFactor = zoomAmount / _maxZoomY;
 
-        _offset.z = Mathf.Lerp(0f, -13f, zoomFactor);
+        _offset.z = Mathf.Lerp(0f, _maxZoomZ, zoomFactor);
         _offset.y = zoomAmount;
     }
 

@@ -11,7 +11,7 @@ public class TwoHanded_IdleState : State
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Enter TwoHanded_IdleState");
+        //Debug.Log("Enter TwoHanded_IdleState");
         anim.StopPlayback();
         anim.CrossFade(animBase.TwoHanded_Idle, 0.5f);
     }
@@ -19,7 +19,7 @@ public class TwoHanded_IdleState : State
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("Exit TwoHanded_IdleState");
+        //Debug.Log("Exit TwoHanded_IdleState");
         anim.StopPlayback();
     }
 

@@ -7,46 +7,63 @@ using UnityEngine.AI;
 public class CharacterMovement : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private NavMeshAgent Agent;
-    [SerializeField] private InputController InputController;
-
-
-
-    [Header("Stats")]
-    [Header("Move")]
-/*    private float _speed;
-    private float _rotationSpeed;*/
+    [SerializeField] private NavMeshAgent _agent;
+    [SerializeField] private InteractHandler _interactHandler;
+    [SerializeField] private Character _character;
 
     [SerializeField] private float animationFinishTime = 0.9f;
 
     public event Action OnIdleEvent;
     public event Action OnMoveEvent;
 
+    private float _default_MoveSpeed = 3.5f;
+    private float _current_MoveSpeed;
+    private StatsValue _moveSpeed;
+
     private void Awake()
     {
-        if (Agent == null)
+        if (_agent == null)
         {
-            Agent = GetComponent<NavMeshAgent>();
+            _agent = GetComponent<NavMeshAgent>();
         }
-
-        if (InputController == null)
+        if (_interactHandler == null)
         {
-            InputController = GetComponent<InputController>();
+            _interactHandler = GetComponent<InteractHandler>();
+        }
+        if (_character == null)
+        {
+            _character = GetComponent<Character>();
         }
     }
     
     private void Start()
     {
+        _moveSpeed = _character.TakeStats(Statistic.MoveSpeed);
+        UpdateMoveSpeed();
 
-        InputController.OnMoveClickEvent += SetDesctination;
+        _interactHandler.OnTargetEvent += SetDesctination;
 
+    }
+
+    private void Update()
+    {
+        if(_current_MoveSpeed != _moveSpeed.Float_value)
+        {
+            _current_MoveSpeed = _moveSpeed.Float_value;
+            UpdateMoveSpeed();
+        }
+    }
+
+    private void UpdateMoveSpeed()
+    {
+        _agent.speed = _default_MoveSpeed * _moveSpeed.Float_value;
     }
 
     public void SetDesctination(Vector3 destinationPosition)
     {
-        if (Agent.SetDestination(destinationPosition))
+        if (_agent.SetDestination(destinationPosition))
         {
-            Agent.isStopped = false;
+            _agent.isStopped = false;
             OnMoveEvent?.Invoke();
             StartCoroutine(IsDestinationReached());
         }
@@ -54,12 +71,12 @@ public class CharacterMovement : MonoBehaviour
 
     public void StopDestination()
     {
-        Agent.isStopped = true;
+        _agent.isStopped = true;
     }
 
     private IEnumerator IsDestinationReached()
     {
-        while (Agent.velocity.magnitude > 0.1f)
+        while (_agent.velocity.magnitude > 0.1f)
         {
             yield return new WaitForSeconds(DataConfig.UpdateRate);
         }

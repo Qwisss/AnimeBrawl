@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.XInput;
 
 public class InteractHandler : MonoBehaviour
 {
@@ -8,13 +11,17 @@ public class InteractHandler : MonoBehaviour
     [SerializeField] private InputController inputController;
     [SerializeField] private AttackHandler _attackHandler;
     [SerializeField] private UIPoolBar _UIPoolBar;
+    [SerializeField] private CharacterMovement _characterMovement;
+    [SerializeField] private Inventory _inventory;
 
-    [HideInInspector] public InteractableObject hoveringOverObject;
-    private Character _hoveringOverCharacter;
+    [HideInInspector] public InteractableObject _interactableObject;
+    private Character _characterObject;
 
-    public event Action<Character> OnTargetEvent; 
+    [SerializeField] private float _interactRange = 1f;
 
-    private void Start()
+    public event Action<Vector3> OnTargetEvent;
+
+    private void Awake()
     {
         if (inputController == null)
         {
@@ -28,53 +35,100 @@ public class InteractHandler : MonoBehaviour
         {
             _attackHandler = GetComponent<AttackHandler>();
         }
-        inputController.OnInteractableObjectEvent += IsInteractableObject;
+        if (_inventory == null)
+        {
+            _inventory = GetComponent<Inventory>();
+        }
+    }
+
+    private void Start()
+    {
+        inputController.OnHitEvent += GetObject;
+        inputController.OnLeftClickEvent += IsInteractObject;
+
         _attackHandler.OnAttackEvent += UpdateHPBar;
     }
 
-    private void IsInteractableObject(RaycastHit hit)
+    private void GetObject(RaycastHit hit)
     {
-        IInteractable interactableObject = hit.transform.GetComponent<IInteractable>();
-        if (interactableObject != null)
+        _interactableObject = hit.transform.GetComponent<InteractableObject>(); 
+        if (_interactableObject != null)
         {
-            IsInteractObject(interactableObject);
+            textOnScreen.text = _interactableObject.ObjectName;
+            _characterObject = _interactableObject.GetComponent<Character>();
         }
         else
         {
-            IsInteractObject(null);
+            ClearHoveredObject();
+        }
+        UpdateHPBar();
+    }
+
+    private void IsInteractObject()
+    {
+        if (_characterObject != null)
+        {
+            _attackHandler.SetTarget(_characterObject);
+
+        }
+        else if(_interactableObject != null)
+        {
+            _attackHandler.SetTarget(null);
+            if (GetDistance(_interactableObject) <= _interactRange)
+            {
+                _interactableObject.Interact(_inventory);
+            }
+            else
+            {
+                StartCoroutine(GoToInteract(_interactableObject));
+                OnTargetEvent?.Invoke(_interactableObject.transform.position);
+            }
+
+        }
+        else
+        {
+            OnTargetEvent?.Invoke(inputController.MouseInputPosition);
         }
     }
 
-    private void IsInteractObject(IInteractable interactableObject)
+    private IEnumerator GoToInteract(InteractableObject interactableObject)
     {
-        if (interactableObject != null)
-        {
-            InteractableObject obj = interactableObject.GetTransform().gameObject.GetComponent<InteractableObject>();
-            _hoveringOverCharacter = obj.GetComponent<Character>();
-            OnTargetEvent?.Invoke(_hoveringOverCharacter);
-            hoveringOverObject = obj;
-            textOnScreen.text = hoveringOverObject.ObjectName;
-        }
-        else
-        {
-            OnTargetEvent?.Invoke(null);
-            _hoveringOverCharacter = null;
-            hoveringOverObject = null;
-            textOnScreen.text = "";
-        }
+        WaitForSeconds wait = new WaitForSeconds(Time.deltaTime);
 
-        UpdateHPBar();
+        while (GetDistance(interactableObject) > _interactRange)
+        {
+            yield return wait;
+        }
+        _characterMovement.StopDestination();
+        interactableObject.Interact(_inventory);
+        StopCoroutine(GoToInteract(null));
+    }
+
+
+    private float GetDistance(InteractableObject interactableObject)
+    {
+        float distance = Vector3.Distance(transform.position, interactableObject.transform.position);
+
+
+        return distance;
     }
 
     private void UpdateHPBar()
     {
-        if(_hoveringOverCharacter != null)
+        if(_characterObject != null)
         {
-            _UIPoolBar.Show(_hoveringOverCharacter._lifepool);
+            _UIPoolBar.Show(_characterObject._lifepool);
         }
         else
         {
             _UIPoolBar.Clear();
         }
+    }
+
+    private void ClearHoveredObject()
+    {
+        _characterObject = null;
+        _interactableObject = null;
+        textOnScreen.text = "";
     }
 }

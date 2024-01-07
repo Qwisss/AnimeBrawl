@@ -8,7 +8,8 @@ public enum Statistic
     Life, 
     Damage,
     Armor,
-    AttackSpeed
+    AttackSpeed,
+    MoveSpeed
 }
 
 [Serializable]
@@ -52,6 +53,7 @@ public class StatsGroup
         Stats.Add(new StatsValue(Statistic.Damage, 8));
         Stats.Add(new StatsValue(Statistic.Armor, 3));
         Stats.Add(new StatsValue(Statistic.AttackSpeed, 1f));
+        Stats.Add(new StatsValue(Statistic.MoveSpeed, 1f));
     }
 
     public StatsValue Get(Statistic statisticToGet)
@@ -117,6 +119,9 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] private StatsGroup _stats;
     public ValuePool _lifepool;
 
+    public bool isDead = false;
+    public event Action OnDeathEvent;
+
     public int Health { get; set; }
 
     public void TakeDamage(int damage)
@@ -147,8 +152,8 @@ public class Character : MonoBehaviour, IDamageable
 
     public void Die() 
     {
-        gameObject.SetActive(false);
-
+        isDead = true;
+        OnDeathEvent?.Invoke();
     }
 
     private void Start()

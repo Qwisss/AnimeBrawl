@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem.XInput;
 
 public class AttackHandler : MonoBehaviour
 {
     [SerializeField] private Character _character;
-    [SerializeField] private InteractHandler _interactHandler;
+    /*[SerializeField] private InteractHandler _interactHandler;*/
+    [SerializeField] private InputController _inputController;
     [SerializeField] private CharacterMovement _characterMovement;
     //public event Action OnIdleEvent;
 
@@ -15,16 +17,16 @@ public class AttackHandler : MonoBehaviour
     [SerializeField] private bool _isCooldown = false;
 
     private Character _target;
+    private Character _currentTarget;
 
     public event Action OnAttackEvent;
 
     private void Awake()
     {
-        if (_interactHandler == null)
+        if (_inputController == null)
         {
-            _interactHandler = GetComponent<InteractHandler>();
+            _inputController = FindObjectOfType<InputController>();
         }
-
         if (_characterMovement == null)
         {
             _characterMovement = GetComponent<CharacterMovement>();
@@ -33,19 +35,24 @@ public class AttackHandler : MonoBehaviour
 
     private void Start()
     {
-        _interactHandler.OnTargetEvent += Attack;
+        _inputController.OnLeftClickEvent += Attack;
     }
 
-    private void Attack(Character target)
+    public void SetTarget(Character target)
     {
-        if (target != null)
+        _target = target;
+    }
+
+    private void Attack()
+    {
+        if (_target != null)
         {
-            _target = target;
+            _target = _currentTarget;
             StartCoroutine(UpdateTimer());
         }
         else
         {
-            _target = null;
+            StopCoroutine(UpdateTimer());
         }
     }
 
@@ -108,7 +115,7 @@ public class AttackHandler : MonoBehaviour
     {
         WaitForSeconds wait = new WaitForSeconds(Time.deltaTime);
 
-       _isCooldown = true;
+        _isCooldown = true;
 
         while (_attackTimer > 0)
         {

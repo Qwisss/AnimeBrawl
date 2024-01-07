@@ -21,7 +21,7 @@ public class FPSCounter : MonoBehaviour
         {
 
             float fps = 1f / Time.deltaTime;
-            _FPSCount.text = $"FPS:{Mathf.Round(fps)}";
+            _FPSCount.text = $"{Mathf.Round(fps)}";
 
             yield return new WaitForSeconds(_updateTime);
         }

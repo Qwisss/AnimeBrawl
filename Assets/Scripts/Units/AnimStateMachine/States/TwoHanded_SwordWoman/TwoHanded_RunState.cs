@@ -12,7 +12,7 @@ public class TwoHanded_RunState : State
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Enter TwoHanded_RunState");
+        //Debug.Log("Enter TwoHanded_RunState");
         anim.StopPlayback();
         anim.CrossFade(animBase.TwoHanded_Run, 0.1f);
     }
@@ -20,7 +20,7 @@ public class TwoHanded_RunState : State
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("Exit TwoHanded_RunState");
+        //Debug.Log("Exit TwoHanded_RunState");
         anim.StopPlayback();
     }
 

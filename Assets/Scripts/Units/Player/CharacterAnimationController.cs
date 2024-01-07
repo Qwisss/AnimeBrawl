@@ -6,6 +6,7 @@ public class CharacterAnimationController : AnimationControllerBase
     [Header("Components")]
     [SerializeField] protected CharacterMovement _characterMovement;
     [SerializeField] protected AttackHandler _attackHandler;
+    [SerializeField] protected Character _character;
     public Animator Animator;
 
     [Header("Animations")]
@@ -29,8 +30,8 @@ public class CharacterAnimationController : AnimationControllerBase
         _characterMovement.OnMoveEvent += HandleRunStart;
 
         _attackHandler.OnAttackEvent += HandleAttackStart;
-        //_attackHandler.OnIdleEvent += HandleIdleStart;
-        // _characterMovement.OnFightIdleEvent += HandleDeathStart;
+
+        _character.OnDeathEvent += HandleDeathStart;
     }
 
     private void Update()

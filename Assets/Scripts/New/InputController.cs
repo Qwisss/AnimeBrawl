@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class InputController : MonoBehaviour
@@ -17,9 +18,11 @@ public class InputController : MonoBehaviour
     private GameObject _currentHoverOverObject;
 
     public event Action<float> OnCameraZoomScrollEvent;
-    public event Action<Vector3> OnMoveClickEvent;
+    //public event Action<Vector3> OnMoveClickEvent;
     public event Action OnLeftClickEvent;
-    public event Action<RaycastHit> OnInteractableObjectEvent;
+    public event Action<RaycastHit> OnHitEvent;
+    public event Action OnPressIEvent;
+    public bool _isPointerOverGameObject;
 
     private void Awake()
     {
@@ -41,7 +44,7 @@ public class InputController : MonoBehaviour
             if (_currentHoverOverObject != _hit.transform.gameObject)
             {
                 _currentHoverOverObject = _hit.transform.gameObject;
-                OnInteractableObjectEvent?.Invoke(_hit);
+                OnHitEvent?.Invoke(_hit);
             }
         }
     }
@@ -50,12 +53,18 @@ public class InputController : MonoBehaviour
 
     public void OnRightClick(InputAction.CallbackContext context)
     {
-        OnMoveClickEvent?.Invoke(MouseInputPosition);
+        if (context.canceled && !EventSystem.current.IsPointerOverGameObject())
+        {
+            //OnMoveClickEvent?.Invoke(MouseInputPosition);
+        }
     }
 
     public void OnLeftClick(InputAction.CallbackContext context)
     {
-        OnLeftClickEvent?.Invoke();
+        if (context.canceled && !EventSystem.current.IsPointerOverGameObject())
+        {
+            OnLeftClickEvent?.Invoke();
+        }
     }
 
     public void OnScroll(InputAction.CallbackContext context)
@@ -64,6 +73,14 @@ public class InputController : MonoBehaviour
 
         OnCameraZoomScrollEvent?.Invoke(scrollDelta);
 
+    }
+
+    public void OnPressI(InputAction.CallbackContext context)
+    {
+        if (context.canceled)
+        {
+            OnPressIEvent?.Invoke();
+        }
     }
 
     #endregion
